@@ -1,13 +1,12 @@
-import { V4 as uuidV4 } from 'uuid'
+import { v4 as uuidV4 } from 'uuid'
 import TransactionStatus from "../types/TransactionStatus"
-import TransactionType from "../types/TransactionType"
 
 export default class Transaction {
 
   private _id: string
   private _accountDebitId: string
   private _accountCreditId: string
-  private _type: TransactionType
+  private _type: number
   private _status: TransactionStatus = TransactionStatus.Pending
   private _value: number
   private _createdAt: Date | null
@@ -16,15 +15,16 @@ export default class Transaction {
     id :string = uuidV4(),
     accountDebitId: string,
     accountCreditId: string,
-    type: TransactionType,
-    value: number
+    type: number,
+    value: number,
+    createdAt: Date | null = null
   ) {
     this._type = type
     this._accountDebitId = accountDebitId
     this._accountCreditId = accountCreditId
     this._value = value
     this._id = id
-    this._createdAt = null
+    this._createdAt = createdAt
   }
 
   get id() {

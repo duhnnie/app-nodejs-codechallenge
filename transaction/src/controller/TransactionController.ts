@@ -1,6 +1,10 @@
+import { Request, Response } from "express";
 import ITransactionRepository from "../types/ITransactionRepository";
+import { validatePayload } from "../util/validator";
+import ResponseCodes from "../util/ResponseCodes";
+import { TransactionCreationDTO, TransactionResponseDTO } from "../dto";
 
-export default class TransactionRepository {
+export default class TransactionController {
 
   private _repository: ITransactionRepository
 
@@ -8,8 +12,23 @@ export default class TransactionRepository {
     this._repository = repository
   }
 
-  createTransaction(data: any) {
-    this._repository.create(data)
+  async createTransaction(req: Request, res: Response) {
+    const { body } = req
+
+    const creationDTO = new TransactionCreationDTO(body)
+    const errors = await validatePayload(creationDTO)
+
+    if (errors.length) {
+      return res.status(ResponseCodes.BAD_REQUEST).json({ errors})
+    }
+
+    const transaction = await this._repository.create(
+      TransactionCreationDTO.toTransaction(creationDTO)
+    )
+
+    const responseDTO = TransactionResponseDTO.fromTransaction(transaction)
+
+    res.status(ResponseCodes.CREATED).json(responseDTO)
   }
 
 }

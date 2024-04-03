@@ -23,9 +23,14 @@ export default class TransactionRepository implements ITransactionRepository {
       }
     })
 
-    console.log("ressssss", res)
-
-    return transaction
+    return new Transaction(
+      res.guid,
+      res.accountDebitGuid,
+      res.accountCreditGuid,
+      res.type,
+      res.value,
+      res.createdAt
+    )
   }
 
 }

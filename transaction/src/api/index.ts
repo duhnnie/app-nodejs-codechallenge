@@ -3,6 +3,8 @@ import TransactionRouter from './transaction.routes'
 
 const app = express()
 
+app.use(express.json())
+
 app.get('/', (_: Request, res: Response) => {
   return res.status(200).json({ status: 'OK' })
 })
