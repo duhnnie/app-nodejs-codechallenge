@@ -33,4 +33,22 @@ export default class TransactionRepository implements ITransactionRepository {
     )
   }
 
+  async findOne(id: string): Promise<Transaction | null> {
+    const transaction = await this._db.transaction.findUnique({
+      where: { guid: id }
+    })
+
+    if (transaction) {
+      return new Transaction(
+        transaction.guid,
+        transaction.accountDebitGuid,
+        transaction.accountCreditGuid,
+        transaction.type,
+        transaction.value,
+        transaction.createdAt
+      )
+    }
+
+    return null
+  }
 }

@@ -3,6 +3,7 @@ import ITransactionRepository from "../types/ITransactionRepository";
 import { validatePayload } from "../util/validator";
 import ResponseCodes from "../util/ResponseCodes";
 import { TransactionCreationDTO, TransactionResponseDTO } from "../dto";
+import Transaction from "../models/Transaction";
 
 export default class TransactionController {
 
@@ -29,6 +30,19 @@ export default class TransactionController {
     const responseDTO = TransactionResponseDTO.fromTransaction(transaction)
 
     res.status(ResponseCodes.CREATED).json(responseDTO)
+  }
+
+  async getTransaction(req: Request, res: Response) {
+    const { id } = req.params
+    const transaction = await this._repository.findOne(id)
+
+    if (transaction) {
+      const responseDTO = TransactionResponseDTO.fromTransaction(transaction)
+      res.status(ResponseCodes.OK).json(responseDTO)
+      return
+    }
+
+    return res.status(ResponseCodes.NOT_FOUND).json({ message: "Not found" })
   }
 
 }
