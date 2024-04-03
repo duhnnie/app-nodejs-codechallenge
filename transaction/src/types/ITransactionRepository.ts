@@ -2,6 +2,6 @@ import Transaction from "../models/Transaction";
 
 export default interface ITransactionRepository {
 
-  create(data: Transaction): Promise<Transaction>
+  create(transaction: Transaction): Promise<Transaction>
 
 }
