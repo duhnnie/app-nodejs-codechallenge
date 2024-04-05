@@ -1,16 +1,18 @@
 import { Request, Response } from "express";
-import ITransactionRepository from "../types/ITransactionRepository";
 import { validatePayload } from "../util/validator";
-import ResponseCodes from "../util/ResponseCodes";
+import ResponseCode from "../util/ResponseCode";
 import { TransactionCreationDTO, TransactionResponseDTO } from "../dto";
-import Transaction from "../models/Transaction";
+import ITransactionUseCase from "../types/ITransactionUseCase";
+import IControllerErrorHandler from "../types/IControllerErrorHandler";
 
 export default class TransactionController {
 
-  private _repository: ITransactionRepository
+  private _useCase: ITransactionUseCase
+  private _errorHandler: IControllerErrorHandler
 
-  constructor(repository: ITransactionRepository) {
-    this._repository = repository
+  constructor(useCase: ITransactionUseCase, errorHandler: IControllerErrorHandler) {
+    this._useCase = useCase
+    this._errorHandler = errorHandler
   }
 
   async createTransaction(req: Request, res: Response) {
@@ -20,29 +22,40 @@ export default class TransactionController {
     const errors = await validatePayload(creationDTO)
 
     if (errors.length) {
-      return res.status(ResponseCodes.BAD_REQUEST).json({ errors})
+      return res.status(ResponseCode.BAD_REQUEST).json({ errors})
     }
 
-    const transaction = await this._repository.create(
-      TransactionCreationDTO.toTransaction(creationDTO)
-    )
+    try {
+      const transaction = await this._useCase.create(
+        TransactionCreationDTO.toTransaction(creationDTO)
+      )
 
-    const responseDTO = TransactionResponseDTO.fromTransaction(transaction)
+      const responseDTO = TransactionResponseDTO.fromTransaction(transaction)
 
-    res.status(ResponseCodes.CREATED).json(responseDTO)
+      res.status(ResponseCode.CREATED).json(responseDTO)
+    } catch (error) {
+      this._errorHandler.onError(error)
+      this._errorHandler.respondWithError(res, error, 500)
+    }
   }
 
   async getTransaction(req: Request, res: Response) {
     const { id } = req.params
-    const transaction = await this._repository.findOne(id)
 
-    if (transaction) {
-      const responseDTO = TransactionResponseDTO.fromTransaction(transaction)
-      res.status(ResponseCodes.OK).json(responseDTO)
-      return
+    try {
+      const transaction = await this._useCase.get(id)
+
+      if (transaction) {
+        const responseDTO = TransactionResponseDTO.fromTransaction(transaction)
+        res.status(ResponseCode.OK).json(responseDTO)
+        return
+      }
+
+      this._errorHandler.respond404(res)
+    } catch (error) {
+      this._errorHandler.onError(error)
+      this._errorHandler.respondWithError(res, error, 500)
     }
-
-    return res.status(ResponseCodes.NOT_FOUND).json({ message: "Not found" })
   }
 
 }
