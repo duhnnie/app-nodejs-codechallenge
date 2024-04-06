@@ -32,9 +32,9 @@ services:
       kafka:
         condition: service_started
     environment:
-      TOPICS: "test-topic,test-topic2,test-topic3"
-      REPLICATION_FACTOR: "1,1,1"
-      PARTITIONS_COUNT: "14,14,14"
+      TOPICS: "yape_pending"
+      REPLICATION_FACTOR: "1"
+      PARTITIONS_COUNT: "14"
       ZOOKEEPER_HOST_PORT: "zookeeper:2181"
     command: ["/bin/bash", "-C", "./create-topics.sh"]
     volumes:
@@ -43,3 +43,14 @@ services:
         target: /create-topics.sh
     init: true
 
+  schema-registry:
+    image: confluentinc/cp-schema-registry:5.5.3
+    depends_on:
+      - zookeeper
+      - kafka
+    ports:
+      - 8081:8081
+    environment:
+      # SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "localhost:9092"
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: "zookeeper:2181"

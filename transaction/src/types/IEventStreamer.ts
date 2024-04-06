@@ -3,7 +3,7 @@ import IEventProducer from "./IEventProducer"
 
 export default interface IEventStreamer {
 
-    createProducer<K, V>(): IEventProducer<K, V>
+    createProducer(): IEventProducer
 
     createConsumer<K, V>(groupId: string): IEventConsumer<K, V>
 

@@ -1,0 +1,15 @@
+{
+  "type": "record",
+  "namespace": "yape",
+  "name": "Transaction",
+  "fields": [
+    {
+      "name": "guid",
+      "type": "string"
+    },
+    {
+      "name": "value",
+      "type": "float"
+    }
+  ]
+}

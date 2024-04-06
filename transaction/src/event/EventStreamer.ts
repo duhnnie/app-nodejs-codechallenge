@@ -11,8 +11,8 @@ export default class EventStreamer implements IEventStreamer {
     this._kafka = new Kafka({ clientId, brokers })
   }
 
-  createProducer<K, V>(): EventProducer<K, V> {
-    return new EventProducer<K, V>(this._kafka)
+  createProducer(): EventProducer {
+    return new EventProducer(this._kafka)
   }
 
   createConsumer<K, V>(groupId: string): EventConsumer<K, V> {

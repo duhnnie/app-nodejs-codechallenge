@@ -1,7 +1,7 @@
-import { Kafka, Producer, Partitioners } from 'kafkajs'
+import { Kafka, Producer, Partitioners, Message } from 'kafkajs'
 import IEventProducer from "../types/IEventProducer";
 
-export default class EventProducer<K, V> implements IEventProducer<K, V> {
+export default class EventProducer implements IEventProducer {
 
   private _kafkaProducer: Producer
 
@@ -13,17 +13,12 @@ export default class EventProducer<K, V> implements IEventProducer<K, V> {
     return this._kafkaProducer.connect()
   }
 
-  send(topic: string, key: K, value: V): Promise<void> {
-    const res = this._kafkaProducer.send({
+  async send(topic: string, key: Message['key'], value: Message['value']): Promise<void> {
+    await this._kafkaProducer.send({
       topic,
-      messages: [{
-        key: String(key),
-        value: String(value)
-      }],
+      messages: [{ key, value }],
       acks: -1, // TODO: configure this one
     })
-
-    console.log("XXXXXX returned from send():", res)
 
     return Promise.resolve()
   }
