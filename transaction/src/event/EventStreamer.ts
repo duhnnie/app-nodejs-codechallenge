@@ -1,15 +1,21 @@
-import IEventConsumer from "../types/IEventConsumer";
-import IEventProducer from "../types/IEventProducer";
+import { Kafka } from 'kafkajs'
 import IEventStreamer from "../types/IEventStreamer";
 import EventConsumer from "./EventConsumer";
 import EventProducer from "./EventProducer";
 
 export default class EventStreamer implements IEventStreamer {
 
-  createProducer<K, V>(): IEventProducer<K, V> {
-    return new EventProducer<K, V>()
+  private _kafka: Kafka
+
+  constructor(clientId: string, brokers: string[]) {
+    this._kafka = new Kafka({ clientId, brokers })
   }
-  createConsumer<K, V>(groupId: string): IEventConsumer<K, V> {
+
+  createProducer<K, V>(): EventProducer<K, V> {
+    return new EventProducer<K, V>(this._kafka)
+  }
+
+  createConsumer<K, V>(groupId: string): EventConsumer<K, V> {
     return new EventConsumer<K, V>(groupId)
   }
 

@@ -17,7 +17,8 @@ export default class TransactionUseCase implements ITransactionUseCase {
 
   async create(transaction: Transaction): Promise<Transaction> {
     const savedTransaction = await this._repository.create(transaction)
-    this._eventProducer.send(["some topic"], String(transaction.type), transaction.id)
+    // this._eventProducer.send(["some topic"], String(transaction.type), transaction.id)
+    await this._eventProducer.send("test-topic", String(transaction.type), transaction.id)
     return savedTransaction
   }
 
