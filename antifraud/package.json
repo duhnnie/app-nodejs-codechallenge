@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@kafkajs/confluent-schema-registry": "^3.3.0",
     "kafkajs": "^2.2.4"
   },
   "devDependencies": {
