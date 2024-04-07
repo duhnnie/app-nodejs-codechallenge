@@ -32,9 +32,9 @@ services:
       kafka:
         condition: service_started
     environment:
-      TOPICS: "yape_pending"
-      REPLICATION_FACTOR: "1"
-      PARTITIONS_COUNT: "14"
+      TOPICS: "yape_pending,yape_reviewed"
+      REPLICATION_FACTOR: "1,1"
+      PARTITIONS_COUNT: "14,14"
       ZOOKEEPER_HOST_PORT: "zookeeper:2181"
     command: ["/bin/bash", "-C", "./create-topics.sh"]
     volumes:

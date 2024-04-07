@@ -1,5 +1,6 @@
 import { IsInt, Min, IsNotEmpty, IsEnum, Matches } from 'class-validator'
 import Transaction from '../models/Transaction'
+import TransactionStatus from '../types/TransactionStatus'
 
 interface TransactionCreationDTOData {
   accountExternalIdDebit: string
@@ -27,7 +28,8 @@ export default class TransactionCreationDTO {
       payload.accountExternalIdDebit,
       payload.accountExternalIdCredit,
       payload.transferTypeId,
-      payload.value
+      payload.value,
+      TransactionStatus.Pending
     )
   }
 

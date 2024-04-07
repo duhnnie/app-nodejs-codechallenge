@@ -24,7 +24,9 @@ export default class TransactionUseCase implements ITransactionUseCase {
 
     const encodedMessage = await this._schemaRegistry.encode(SchemaType.Transaction, {
       guid: transaction.id,
-      value: transaction.value
+      debitAccountId: transaction.accountDebitId, // TODO: be consistent with names
+      value: transaction.value,
+      status: transaction.status
     })
 
     // TODO: use env var for topic name

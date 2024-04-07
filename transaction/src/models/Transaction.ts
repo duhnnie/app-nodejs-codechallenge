@@ -7,7 +7,7 @@ export default class Transaction {
   private _accountDebitId: string
   private _accountCreditId: string
   private _type: number
-  private _status: TransactionStatus = TransactionStatus.Pending
+  private _status: TransactionStatus
   private _value: number
   private _createdAt: Date | null
 
@@ -17,12 +17,14 @@ export default class Transaction {
     accountCreditId: string,
     type: number,
     value: number,
+    status: TransactionStatus,
     createdAt: Date | null = null
   ) {
     this._type = type
     this._accountDebitId = accountDebitId
     this._accountCreditId = accountCreditId
     this._value = value
+    this._status = status
     this._id = id
     this._createdAt = createdAt
   }

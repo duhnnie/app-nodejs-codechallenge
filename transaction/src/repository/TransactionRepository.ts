@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import Transaction from "../models/Transaction";
 import ITransactionRepository from "../types/ITransactionRepository";
+import TransactionStatus from "../types/TransactionStatus";
 
 export default class TransactionRepository implements ITransactionRepository {
 
@@ -29,6 +30,7 @@ export default class TransactionRepository implements ITransactionRepository {
       res.accountCreditGuid,
       res.type,
       res.value,
+      res.status as TransactionStatus,
       res.createdAt
     )
   }
@@ -45,6 +47,7 @@ export default class TransactionRepository implements ITransactionRepository {
         transaction.accountCreditGuid,
         transaction.type,
         transaction.value,
+        transaction.status as TransactionStatus,
         transaction.createdAt
       )
     }

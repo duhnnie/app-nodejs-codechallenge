@@ -19,8 +19,6 @@ export default class EventProducer implements IEventProducer {
       messages: [{ key, value }],
       acks: -1, // TODO: configure this one
     })
-
-    return Promise.resolve()
   }
 
   disconnect(): Promise<void> {

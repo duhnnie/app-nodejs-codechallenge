@@ -8,8 +8,20 @@
       "type": "string"
     },
     {
+      "name": "debitAccountId",
+      "type": "string"
+    },
+    {
       "name": "value",
       "type": "float"
+    },
+    {
+      "name": "status",
+      "type": {
+        "type": "enum",
+        "name": "TransactionStatus",
+        "symbols": ["PENDING", "APPROVED", "REJECTED"]
+      }
     }
   ]
 }
