@@ -1,21 +1,28 @@
-import SchemaRegistry from "../messageSchema/SchemaRegistry";
+import SchemaStore from "../stream/SchemaStore";
 import Transaction from "../models/Transaction";
 import IEventProducer from "../types/IEventProducer";
-import IEventStreamer from "../types/IEventStreamer";
 import ITransactionRepository from "../types/ITransactionRepository";
 import ITransactionUseCase from "../types/ITransactionUseCase";
 import SchemaType from "../types/SchemaType";
+import TransactionStatus from "../types/TransactionStatus";
 
 export default class TransactionUseCase implements ITransactionUseCase {
 
   private _repository: ITransactionRepository
   private _eventProducer: IEventProducer
-  private _schemaRegistry: SchemaRegistry
+  private _schemaRegistry: SchemaStore
+  private _topic: string
 
-  constructor(repository: ITransactionRepository, eventStreamer: IEventStreamer, schemaRegistry: SchemaRegistry) {
+  constructor(
+    repository: ITransactionRepository,
+    eventProducer: IEventProducer,
+    schemaRegistry: SchemaStore,
+    topic: string
+  ) {
     this._repository = repository
-    this._eventProducer = eventStreamer.createProducer()
+    this._eventProducer = eventProducer
     this._schemaRegistry = schemaRegistry
+    this._topic = topic
     this._eventProducer.connect()
   }
 
@@ -29,8 +36,7 @@ export default class TransactionUseCase implements ITransactionUseCase {
       status: transaction.status
     })
 
-    // TODO: use env var for topic name
-    await this._eventProducer.send("yape_pending", transaction.accountDebitId, encodedMessage)
+    await this._eventProducer.send(this._topic, transaction.accountDebitId, encodedMessage)
     console.log(`Message event ${transaction.id} dispatched to yape_pending`)
 
     return savedTransaction
@@ -40,6 +46,15 @@ export default class TransactionUseCase implements ITransactionUseCase {
     const transaction = await this._repository.findOne(id)
 
     return transaction
+  }
+
+
+  async approve(id: string): Promise<void> {
+    await this._repository.updateStatus(id, TransactionStatus.Approved)
+  }
+
+  async reject(id: string): Promise<void> {
+    await this._repository.updateStatus(id, TransactionStatus.Rejected)
   }
 
 }

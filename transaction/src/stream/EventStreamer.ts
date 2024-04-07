@@ -15,8 +15,8 @@ export default class EventStreamer implements IEventStreamer {
     return new EventProducer(this._kafka)
   }
 
-  createConsumer<K, V>(groupId: string): EventConsumer<K, V> {
-    return new EventConsumer<K, V>(groupId)
+  createConsumer(groupId: string): EventConsumer {
+    return new EventConsumer(this._kafka, groupId)
   }
 
 }

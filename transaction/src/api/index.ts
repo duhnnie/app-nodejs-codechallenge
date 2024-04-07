@@ -1,14 +1,21 @@
 import express, { Request, Response } from "express"
-import TransactionRouter from './transaction.routes'
+import { createTransactionRouter } from "./transaction.routes"
+import TransactionController from "../controller/TransactionController"
+import ITransactionUseCase from "../types/ITransactionUseCase"
+import IControllerErrorHandler from "../types/IControllerErrorHandler"
 
-const app = express()
+export const createAPIService = (useCase: ITransactionUseCase, errorHandler: IControllerErrorHandler) => {
+  const controller = new TransactionController(useCase, errorHandler)
+  const transactionRouter = createTransactionRouter(controller)
+  const app = express()
 
-app.use(express.json())
+  app.use(express.json())
 
-app.get('/', (_: Request, res: Response) => {
-  return res.status(200).json({ status: 'OK' })
-})
+  app.get('/', (_: Request, res: Response) => {
+    return res.status(200).json({ status: 'OK' })
+  })
 
-app.use("/transaction", TransactionRouter)
+  app.use("/transaction", transactionRouter)
 
-export default app
+  return app
+}

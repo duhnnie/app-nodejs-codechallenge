@@ -5,11 +5,10 @@ import TransactionStatus from "../types/TransactionStatus";
 
 export default class TransactionRepository implements ITransactionRepository {
 
-  // TODO: move this upper, so we have a unique database connection.
   private _db: PrismaClient
 
-  constructor() {
-    this._db = new PrismaClient()
+  constructor(db: PrismaClient) {
+    this._db = db
   }
 
   async create(transaction: Transaction): Promise<Transaction> {
@@ -54,4 +53,12 @@ export default class TransactionRepository implements ITransactionRepository {
 
     return null
   }
+
+  async updateStatus(id: string, status: TransactionStatus): Promise<void> {
+    await this._db.transaction.update({
+      data: { status: status as TransactionStatus },
+      where: { guid: id }
+    })
+  }
+
 }

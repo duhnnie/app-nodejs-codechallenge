@@ -1,8 +1,12 @@
 import IEventMessage from "./IEventMessage"
 
-export default interface IEventConsumer<K, V> {
+export type OnMessage = (message :IEventMessage ) => Promise<boolean>
 
-  connect(): void
-  subscribe(topic: string, fromBeginning: boolean, onMessage: (message: IEventMessage<K, V>) => any): void
+export default interface IEventConsumer {
+
+  connect(): Promise<void>
+  subscribe(topic: string, fromBeginning: boolean): Promise<void>
+  consume(onMessage: OnMessage): Promise<void>
+  close(): Promise<void>
 
 }

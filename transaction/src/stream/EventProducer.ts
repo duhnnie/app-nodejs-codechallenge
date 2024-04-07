@@ -17,7 +17,7 @@ export default class EventProducer implements IEventProducer {
     await this._kafkaProducer.send({
       topic,
       messages: [{ key, value }],
-      acks: -1, // TODO: configure this one
+      acks: -1,
     })
   }
 

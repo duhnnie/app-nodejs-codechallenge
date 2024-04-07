@@ -29,7 +29,7 @@ export default class TransactionReviewer {
     this._approver = approver
   }
 
-  async start(done: () => void) {
+  async start() {
     await this._consumer.connect()
 
     await this._consumer.subscribe({
@@ -60,8 +60,6 @@ export default class TransactionReviewer {
         }
       }
     })
-
-    done()
   }
 
   async stop() {

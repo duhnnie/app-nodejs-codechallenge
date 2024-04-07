@@ -1,8 +1,7 @@
-export default interface IEventMessage<K, V> {
+export default interface IEventMessage {
 
-  get key(): K
-  get value(): V
+  get key(): Buffer | null
+  get value(): Buffer | null
   get offset(): number
-  get partition(): number
 
 }

@@ -2,25 +2,25 @@ import IEventMessage from "../types/IEventMessage";
 
 type EventMessageHeaders = Record<string, string|number>
 
-export default class EventMessage<K, V> implements IEventMessage<K, V> {
+export default class EventMessage implements IEventMessage {
 
-  private _key: K
-  private _value: V
+  private _key: Buffer
+  private _value: Buffer
   private _offset: number
   private _partition: number
 
-  constructor(key: K, value: V, headers: EventMessageHeaders = {}, offset: number, partition: number) {
+  constructor(key: Buffer, value: Buffer, headers: EventMessageHeaders = {}, offset: number, partition: number) {
     this._key = key
     this._value = value
     this._partition = partition
     this._offset = offset
   }
 
-  get key(): K {
+  get key(): Buffer {
     return this._key
   }
 
-  get value(): V {
+  get value(): Buffer {
     return this._value
   }
 
