@@ -8,6 +8,13 @@ services:
       - POSTGRES_USER=yapeuser
       - POSTGRES_PASSWORD=yapassword
       - POSTGRES_DB=yape
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready", "-d", "db_prod"]
+      interval: 30s
+      timeout: 60s
+      retries: 5
+      start_period: 80s
+
   zookeeper:
     image: confluentinc/cp-zookeeper:5.5.3
     environment:
@@ -54,3 +61,43 @@ services:
       # SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "localhost:9092"
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
       SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: "zookeeper:2181"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  antifraud:
+    build:
+      context: ./antifraud
+    depends_on:
+      # kafka
+      schema-registry:
+        condition: service_healthy
+    environment:
+      YAPE_ANTIFRAUD_KAFKA_BROKERS: "kafka:29092"
+      YAPE_ANTIFRAUD_KAFKA_SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
+      YAPE_ANTIFRAUD_KAFKA_READ_TOPIC: "yape_pending"
+      YAPE_ANTIFRAUD_KAFKA_WRITE_TOPIC: "yape_reviewed"
+      YAPE_ANTIFRAUD_KAFKA_CONSUMER_GROUP_ID: "yape-antifraud-service"
+
+  transaction:
+    build:
+      context: ./transaction
+    depends_on:
+      kafka:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+      schema-registry:
+        condition: service_healthy
+    ports:
+      - 3000:3000
+    environment:
+      YAPE_TRANSACTION_DATABASE_URL: "postgresql://yapeuser:yapassword@postgres:5432/yape?schema: public"
+      YAPE_ANTIFRAUD_KAFKA_SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
+      YAPE_TRANSACTION_KAFKA_CLIENT_ID: "yape_transaction_service"
+      YAPE_TRANSACTION_KAFKA_BROKERS: "kafka:29092"
+      YAPE_TRANSACTION_KAFKA_CONSUMER_GROUP_ID: "yape_transaction_consumer_group"
+      YAPE_TRANSACTION_KAFKA_READ_TOPIC: "yape_reviewed"
+      YAPE_TRANSACTION_KAFKA_WRITE_TOPIC: "yape_pending"

@@ -8,7 +8,7 @@ export function initProcessErrorHandlers(onError: () => Promise<void>) {
         console.log(`process.on ${type}`)
         console.error(e)
         await onError()
-        process.exit(0)
+        process.exit(1)
       } catch (_) {
         process.exit(1)
       }
