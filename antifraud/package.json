@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/index.ts",
   "scripts": {
-    "dev": "nodemon ./src/index.ts",
+    "dev": "dotenvx run -- nodemon ./src/index.ts",
     "start": "node ./dist/index.js",
     "build": "tsc -p ."
   },
@@ -15,6 +15,7 @@
     "kafkajs": "^2.2.4"
   },
   "devDependencies": {
+    "@dotenvx/dotenvx": "^0.30.0",
     "@types/node": "^20.12.5",
     "nodemon": "^3.1.0",
     "ts-node": "^10.9.2",

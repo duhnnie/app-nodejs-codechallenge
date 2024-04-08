@@ -2,20 +2,22 @@ import App from "./App"
 import SchemaStore from "./stream/SchemaStore"
 import { initProcessErrorHandlers } from "./util/errors"
 
-const port = process.env.PORT || 3000
+const port = process.env.YAPE_TRANSACTION_API_PORT || 3000
 
 console.log("Starting Transaction service...")
 
 const application = new App({
   apiPort: port,
-  kafkaClientId: "yape_transaction_service",
-  kafkaBrokers: ["127.0.0.1:9092"],
-  kafkaConsumerGroupId: "yape_transaction_consumer_group",
-  kafkaAntifraudReadTopic: "yape_reviewed",
-  kafkaAntifraudWriteTopic: "yape_pending"
+  kafkaClientId: process.env.YAPE_TRANSACTION_KAFKA_CLIENT_ID as string,
+  kafkaBrokers: (process.env.YAPE_TRANSACTION_KAFKA_BROKERS ?? "").split(","),
+  kafkaConsumerGroupId: process.env.YAPE_TRANSACTION_KAFKA_CONSUMER_GROUP_ID as string,
+  kafkaAntifraudReadTopic: process.env.YAPE_TRANSACTION_KAFKA_READ_TOPIC as string,
+  kafkaAntifraudWriteTopic: process.env.YAPE_TRANSACTION_KAFKA_WRITE_TOPIC as string,
 })
 
-SchemaStore.init("http://localhost:8081").then(() => {
+const schemaRegistryURL = process.env.YAPE_ANTIFRAUD_KAFKA_SCHEMA_REGISTRY_URL || ""
+
+SchemaStore.init(schemaRegistryURL).then(() => {
   console.log("Schema store initialized!")
 
   return application.start()

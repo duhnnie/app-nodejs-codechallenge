@@ -10,7 +10,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = env("YAPE_TRANSACTION_DATABASE_URL")
 }
 
 enum TransactionStatus {
