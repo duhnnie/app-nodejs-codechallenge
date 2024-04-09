@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import Transaction from "../models/Transaction";
 import ITransactionRepository from "../types/ITransactionRepository";
 import TransactionStatus from "../types/TransactionStatus";
+import TransactionType from "../models/TransactionType";
 
 export default class TransactionRepository implements ITransactionRepository {
 
@@ -59,6 +60,18 @@ export default class TransactionRepository implements ITransactionRepository {
       data: { status: status as TransactionStatus },
       where: { guid: id }
     })
+  }
+
+  async findOneType(id: number): Promise<TransactionType | null> {
+    const res = await this._db.transactionType.findUnique({
+      where: { id }
+    })
+
+    if (res) {
+      return new TransactionType(res.id, res.name)
+    } else {
+      return null
+    }
   }
 
 }

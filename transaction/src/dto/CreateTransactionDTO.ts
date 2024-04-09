@@ -1,42 +1,42 @@
-import { IsInt, Min, IsNotEmpty, IsEnum, Matches } from 'class-validator'
+import { IsInt, Min, IsUUID } from 'class-validator'
 import Transaction from '../models/Transaction'
 import TransactionStatus from '../types/TransactionStatus'
 
 interface TransactionCreationDTOData {
-  accountExternalIdDebit: string
-  accountExternalIdCredit: string
-  transferTypeId: number
+  accountDebitId: string
+  accountCreditId: string
+  type: number
   value: number
 }
 
 export default class TransactionCreationDTO {
-  @IsNotEmpty()
-  public readonly accountExternalIdDebit: string
+  @IsUUID()
+  public readonly accountDebitId: string
 
-  @IsNotEmpty()
-  public readonly accountExternalIdCredit: string
+  @IsUUID()
+  public readonly accountCreditId: string
 
   @IsInt()
-  public readonly transferTypeId: number
+  public readonly type: number
 
   @Min(0.01)
   public readonly value: number
 
-  public static toTransaction(payload: TransactionCreationDTO) {
+  public toTransaction() {
     return new Transaction(
       undefined,
-      payload.accountExternalIdDebit,
-      payload.accountExternalIdCredit,
-      payload.transferTypeId,
-      payload.value,
+      this.accountDebitId,
+      this.accountCreditId,
+      this.type,
+      this.value,
       TransactionStatus.Pending
     )
   }
 
   constructor(data: TransactionCreationDTOData) {
-    this.accountExternalIdCredit = data.accountExternalIdCredit
-    this.accountExternalIdDebit = data.accountExternalIdDebit
-    this.transferTypeId = data.transferTypeId
+    this.accountCreditId = data.accountCreditId
+    this.accountDebitId = data.accountDebitId
+    this.type = data.type
     this.value = data.value
   }
 }

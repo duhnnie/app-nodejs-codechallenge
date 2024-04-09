@@ -6,6 +6,7 @@ export const createTransactionRouter = (controller: TransactionController) => {
 
   router.post("/", controller.createTransaction.bind(controller))
   router.get("/:id", controller.getTransaction.bind(controller))
+  router.get("/type/:id", controller.getTransactionType.bind(controller))
 
   return router
 }

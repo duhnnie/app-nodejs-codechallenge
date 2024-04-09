@@ -3,13 +3,13 @@ import TransactionStatus from "../types/TransactionStatus"
 
 export default class Transaction {
 
-  private _id: string
-  private _accountDebitId: string
-  private _accountCreditId: string
-  private _type: number
-  private _status: TransactionStatus
-  private _value: number
-  private _createdAt: Date | null
+  public readonly id: string
+  public readonly accountDebitId: string
+  public readonly accountCreditId: string
+  public readonly type: number
+  public readonly status: TransactionStatus
+  public readonly value: number
+  public readonly createdAt: Date | null
 
   constructor(
     id :string = uuidV4(),
@@ -20,40 +20,12 @@ export default class Transaction {
     status: TransactionStatus,
     createdAt: Date | null = null
   ) {
-    this._type = type
-    this._accountDebitId = accountDebitId
-    this._accountCreditId = accountCreditId
-    this._value = value
-    this._status = status
-    this._id = id
-    this._createdAt = createdAt
-  }
-
-  get id() {
-    return this._id
-  }
-
-  get accountDebitId() {
-    return this._accountDebitId
-  }
-
-  get accountCreditId() {
-    return this._accountCreditId
-  }
-
-  get type() {
-    return this._type
-  }
-
-  get status() {
-    return this._status
-  }
-
-  get value() {
-    return this._value
-  }
-
-  get createdAt() {
-    return this._createdAt
+    this.type = type
+    this.accountDebitId = accountDebitId
+    this.accountCreditId = accountCreditId
+    this.value = value
+    this.status = status
+    this.id = id
+    this.createdAt = createdAt
   }
 }

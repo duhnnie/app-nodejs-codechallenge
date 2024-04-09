@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { validatePayload } from "../util/validator";
 import ResponseCode from "../util/ResponseCode";
-import { TransactionCreationDTO, TransactionResponseDTO } from "../dto";
+import { TransactionCreationDTO } from "../dto";
 import ITransactionUseCase from "../types/ITransactionUseCase";
 import IControllerErrorHandler from "../types/IControllerErrorHandler";
 
@@ -27,12 +27,10 @@ export default class TransactionController {
 
     try {
       const transaction = await this._useCase.create(
-        TransactionCreationDTO.toTransaction(creationDTO)
+        creationDTO.toTransaction()
       )
 
-      const responseDTO = TransactionResponseDTO.fromTransaction(transaction)
-
-      res.status(ResponseCode.CREATED).json(responseDTO)
+      res.status(ResponseCode.CREATED).json(transaction)
     } catch (error) {
       this._errorHandler.onError(error)
       this._errorHandler.respondWithError(res, error, 500)
@@ -43,18 +41,39 @@ export default class TransactionController {
     const { id } = req.params
 
     try {
-      const transaction = await this._useCase.get(id)
+      const transaction = await this._useCase.getById(id)
 
       if (transaction) {
-        const responseDTO = TransactionResponseDTO.fromTransaction(transaction)
-        res.status(ResponseCode.OK).json(responseDTO)
+        res.status(ResponseCode.OK).json(transaction)
         return
       }
 
       this._errorHandler.respond404(res)
     } catch (error) {
       this._errorHandler.onError(error)
-      this._errorHandler.respondWithError(res, error, 500)
+      this._errorHandler.respondWithError(res, error, ResponseCode.INTERNAL_SERVER_ERROR)
+    }
+  }
+
+  async getTransactionType(req: Request, res: Response) {
+    const id = parseInt(req.params.id, 10)
+
+    if (isNaN(id)) {
+      const error = new Error('Invalid parameter, number expected.')
+      this._errorHandler.respondWithError(res, error, ResponseCode.BAD_REQUEST)
+    }
+
+    try {
+      const transactionType = await this._useCase.getTypeById(id)
+
+      if (transactionType) {
+        return res.status(ResponseCode.OK).json(transactionType)
+      }
+
+      this._errorHandler.respond404(res)
+    } catch (error) {
+      this._errorHandler.onError(error)
+      this._errorHandler.respondWithError(res, error, ResponseCode.INTERNAL_SERVER_ERROR)
     }
   }
 

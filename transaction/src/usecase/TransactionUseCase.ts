@@ -5,6 +5,7 @@ import ITransactionRepository from "../types/ITransactionRepository";
 import ITransactionUseCase from "../types/ITransactionUseCase";
 import SchemaType from "../types/SchemaType";
 import TransactionStatus from "../types/TransactionStatus";
+import TransactionType from "../models/TransactionType";
 
 export default class TransactionUseCase implements ITransactionUseCase {
 
@@ -42,7 +43,7 @@ export default class TransactionUseCase implements ITransactionUseCase {
     return savedTransaction
   }
 
-  async get(id: string): Promise<Transaction | null> {
+  async getById(id: string): Promise<Transaction | null> {
     const transaction = await this._repository.findOne(id)
 
     return transaction
@@ -55,6 +56,10 @@ export default class TransactionUseCase implements ITransactionUseCase {
 
   async reject(id: string): Promise<void> {
     await this._repository.updateStatus(id, TransactionStatus.Rejected)
+  }
+
+  async getTypeById(id: number): Promise<TransactionType | null> {
+    return await this._repository.findOneType(id)
   }
 
 }
