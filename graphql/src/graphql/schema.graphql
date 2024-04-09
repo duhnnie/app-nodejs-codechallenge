@@ -1,0 +1,21 @@
+type TransactionStatus {
+  name: String!
+}
+
+type TransactionType {
+  id: Int!
+  name: String!
+}
+
+type Transaction {
+  transactionExternalId: ID!
+  transactionType: TransactionType!
+  transactionStatus: TransactionStatus!
+  value: Float!
+  createdAt: String!
+}
+
+type Query {
+  TransactionById(id: ID!): Transaction
+  TransactionTypes(offset: Int!, limit: Int!): [TransactionType]
+}
