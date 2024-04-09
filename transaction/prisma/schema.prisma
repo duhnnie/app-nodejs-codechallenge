@@ -19,12 +19,19 @@ enum TransactionStatus {
   REJECTED
 }
 
+model TransactionType {
+  id Int @id @default(autoincrement())
+  name String
+  transactions Transaction[]
+}
+
 model Transaction {
   guid String @id
   accountDebitGuid String
   accountCreditGuid String
-  type Int
   value Float
   status TransactionStatus @default(PENDING)
   createdAt DateTime @default(now())
+  type TransactionType @relation(fields: [typeId], references: [id])
+  typeId Int
 }

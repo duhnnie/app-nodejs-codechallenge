@@ -17,7 +17,7 @@ export default class TransactionRepository implements ITransactionRepository {
         guid: transaction.id,
         accountDebitGuid: transaction.accountDebitId,
         accountCreditGuid: transaction.accountCreditId,
-        type: transaction.type,
+        typeId: transaction.type,
         value: transaction.value,
         status: transaction.status
       }
@@ -27,7 +27,7 @@ export default class TransactionRepository implements ITransactionRepository {
       res.guid,
       res.accountDebitGuid,
       res.accountCreditGuid,
-      res.type,
+      res.typeId,
       res.value,
       res.status as TransactionStatus,
       res.createdAt
@@ -44,7 +44,7 @@ export default class TransactionRepository implements ITransactionRepository {
         transaction.guid,
         transaction.accountDebitGuid,
         transaction.accountCreditGuid,
-        transaction.type,
+        transaction.typeId,
         transaction.value,
         transaction.status as TransactionStatus,
         transaction.createdAt
