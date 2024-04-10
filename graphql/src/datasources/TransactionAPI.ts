@@ -20,4 +20,15 @@ export default class TransactionAPI extends RESTDataSource {
     return await this.get<TransactionTypeAPIGetResponse[]>(`/transaction-type?offset=${offset}&limit=${limit}`)
   }
 
+  async createTransaction(accountDebitId: string, accountCreditId: string, type: number, value: number): Promise<TransactionAPIGetResponse> {
+    return await this.post("/transaction", {
+      body: {
+        accountDebitId,
+        accountCreditId,
+        type,
+        value
+      }
+    })
+  }
+
 }

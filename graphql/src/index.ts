@@ -8,13 +8,6 @@ import ContextType from "./types/ContextType"
 
 const schemaPath = path.resolve(__dirname, "./graphql/schema.graphql")
 const typeDefs = readFileSync(schemaPath, { encoding: 'utf-8' })
-// const datasource = new TransactionAPI()
-
-// datasource.getTransaction("002683c2-fbfe-4d90-9b3e-b157e6f0d3fb")
-//   .then((transaction) => {
-//     console.log(`status: ${transaction.transactionStatus.name} value: ${transaction.value}`)
-//   })
-//   .catch((error) => console.log(error))
 
 const server = new ApolloServer<ContextType>({
   typeDefs,

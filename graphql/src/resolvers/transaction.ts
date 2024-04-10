@@ -1,10 +1,6 @@
 import { GraphQLFieldResolver, GraphQLTypeResolver } from "graphql";
-// import { TransactionResolvers, TransactionStatus } from "../generated/graphql";
-// import { TransactionResolvers, TransactionStatus } from "../generated/graphql";
 import ContextType from "../types/ContextType";
 import TransactionGetResponse from "../types/TransactionAPIGetReponse";
-import { Transaction } from "../generated/graphql";
-import TransactionTypeAPIGetResponse from "../types/TransactionTypeAPIGetResponse";
 
 const transactionExternalId: GraphQLFieldResolver<
   TransactionGetResponse,
