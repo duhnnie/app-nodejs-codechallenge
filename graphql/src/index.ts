@@ -5,6 +5,7 @@ import { readFileSync } from "fs"
 import resolvers from './resolvers'
 import path from "path"
 import ContextType from "./types/ContextType"
+import { ApolloServerPluginLandingPageLocalDefault, ApolloServerPluginLandingPageProductionDefault } from '@apollo/server/plugin/landingPage/default';
 
 const schemaPath = path.resolve(__dirname, "./graphql/schema.graphql")
 const typeDefs = readFileSync(schemaPath, { encoding: 'utf-8' })
@@ -13,6 +14,10 @@ const port = Number(process.env.YAPE_GRAPHQL_PORT) ?? 4000
 const server = new ApolloServer<ContextType>({
   typeDefs,
   resolvers,
+  introspection: true,
+  plugins: [
+    ApolloServerPluginLandingPageLocalDefault({ footer: false }),
+  ]
 })
 
 startStandaloneServer(server, {
@@ -29,3 +34,4 @@ startStandaloneServer(server, {
 }).then(({ url }) => {
   console.log(`GraphQL server running at ${url}`)
 })
+

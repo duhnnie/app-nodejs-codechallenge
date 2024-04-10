@@ -101,3 +101,21 @@ services:
       YAPE_TRANSACTION_KAFKA_CONSUMER_GROUP_ID: "yape_transaction_consumer_group"
       YAPE_TRANSACTION_KAFKA_READ_TOPIC: "yape_reviewed"
       YAPE_TRANSACTION_KAFKA_WRITE_TOPIC: "yape_pending"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000"]
+      interval: 30s
+      timeout: 30s
+      retries: 10
+      start_period: 30s
+
+  graphql:
+    build:
+      context: ./graphql
+    depends_on:
+      transaction:
+        condition: service_healthy
+    ports:
+      - 4000:4000
+    environment:
+      YAPE_GRAPHQL_PORT: 4000
+      YAPE_TRANSACTION_API_URL: "http://transaction:3000"

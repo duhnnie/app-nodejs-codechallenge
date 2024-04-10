@@ -5,7 +5,8 @@
   "main": "./src/index.ts",
   "scripts": {
     "dev": "dotenvx run -- nodemon ./src/index.ts",
-    "build": "tsc -p .",
+    "build": "yarn generate && tsc -p .",
+    "postbuild": "cp -r ./src/graphql ./dist/",
     "start": "node ./dist/index.js",
     "generate": "graphql-codegen --config codegen.ts"
   },
