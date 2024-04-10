@@ -8,6 +8,7 @@ import ContextType from "./types/ContextType"
 
 const schemaPath = path.resolve(__dirname, "./graphql/schema.graphql")
 const typeDefs = readFileSync(schemaPath, { encoding: 'utf-8' })
+const port = Number(process.env.YAPE_GRAPHQL_PORT) ?? 4000
 
 const server = new ApolloServer<ContextType>({
   typeDefs,
@@ -23,7 +24,8 @@ startStandaloneServer(server, {
         transactionAPI: new TransactionAPI({ cache })
       }
     }
-  }
+  },
+  listen: { port }
 }).then(({ url }) => {
   console.log(`GraphQL server running at ${url}`)
 })

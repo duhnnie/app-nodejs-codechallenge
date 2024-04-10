@@ -5,9 +5,8 @@ import TransactionTypeAPIGetResponse from '../types/TransactionTypeAPIGetRespons
 export default class TransactionAPI extends RESTDataSource {
 
   // TODO: env vars
-  public baseURL: string = "http://localhost:3000"
+  public baseURL: string = process.env.YAPE_TRANSACTION_API_URL ?? "YAPE_TRANSACTION_API_URL"
 
-  // TODO: fix that any type
   async getTransaction(id: string): Promise<TransactionAPIGetResponse> {
     return await this.get<TransactionAPIGetResponse>(`/transaction/${encodeURIComponent(id)}`)
   }
