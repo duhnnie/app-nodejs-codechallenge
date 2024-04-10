@@ -1,4 +1,4 @@
-import { IsInt, Min, IsUUID } from 'class-validator'
+import { IsInt, Min, IsString } from 'class-validator'
 import Transaction from '../models/Transaction'
 import TransactionStatus from '../types/TransactionStatus'
 
@@ -10,10 +10,10 @@ interface TransactionCreationDTOData {
 }
 
 export default class TransactionCreationDTO {
-  @IsUUID()
+  @IsString()
   public readonly accountDebitId: string
 
-  @IsUUID()
+  @IsString()
   public readonly accountCreditId: string
 
   @IsInt()
