@@ -3,10 +3,10 @@ import { PrismaClient } from "@prisma/client"
 const prisma = new PrismaClient()
 
 async function main() {
-  const transactionTypes = ['type A', 'type B', 'type C']
+  const transactionTypes = ['type A', 'type B', 'type C', 'type D', 'type E', 'type F']
 
-  transactionTypes.forEach(async (transactionType, index) => {
-    await prisma.transactionType.upsert({
+  const promises = transactionTypes.map((transactionType, index) => {
+    return prisma.transactionType.upsert({
       where: { id: index + 1 },
       update: {},
       create: {
@@ -14,6 +14,8 @@ async function main() {
       }
     })
   })
+
+  await Promise.all(promises)
 
   console.log(`database was seeded with transaction types: ${transactionTypes}`)
 }
