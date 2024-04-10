@@ -12,7 +12,7 @@ const query = {
   TransactionTypes: async(_: any, args: QueryTransactionTypesArgs, { dataSources }: ContextType) => {
     const { offset, limit } = args
     const { transactionAPI } = dataSources
-    const response = await transactionAPI.getTransactionTypes(offset, limit)
+    const response = await transactionAPI.getTransactionTypes(offset ?? 0, limit ?? 50)
 
     return response
   }

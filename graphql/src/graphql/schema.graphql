@@ -24,7 +24,7 @@ type Transaction {
 
 type Query {
   TransactionById(id: ID!): Transaction
-  TransactionTypes(offset: Int!, limit: Int!): [TransactionType]
+  TransactionTypes(offset: Int, limit: Int): [TransactionType]
 }
 
 type Mutation {

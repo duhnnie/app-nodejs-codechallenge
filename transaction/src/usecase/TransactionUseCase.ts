@@ -62,8 +62,8 @@ export default class TransactionUseCase implements ITransactionUseCase {
     return await this._repository.findOneType(id)
   }
 
-  async getTypes(): Promise<TransactionType[]> {
-    return await this._repository.findTypes()
+  async getTypes(offset: number, limit: number): Promise<TransactionType[]> {
+    return await this._repository.findTypes(offset, limit)
   }
 
 }

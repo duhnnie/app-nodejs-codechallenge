@@ -8,6 +8,6 @@ export default interface ITransactionUseCase {
   approve(id: Transaction['id']): Promise<void>
   reject(id: Transaction['id']): Promise<void>
   getTypeById(id: Required<TransactionType['id']>): Promise<TransactionType | null>
-  getTypes(): Promise<TransactionType[]>
+  getTypes(offset: number, limit: number): Promise<TransactionType[]>
 
 }

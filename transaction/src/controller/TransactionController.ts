@@ -78,8 +78,13 @@ export default class TransactionController {
   }
 
   async getTransactionTypes(req: Request, res: Response) {
+    const { offset = 0, limit = 50 } = req.query
+
     try {
-      const transactionTypes = await this._useCase.getTypes()
+      const transactionTypes = await this._useCase.getTypes(
+        Number(offset),
+        Number(limit)
+      )
 
       return res.status(ResponseCode.OK).json(transactionTypes)
     } catch(error) {
