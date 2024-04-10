@@ -4,8 +4,8 @@ import TransactionController from "../controller/TransactionController";
 export const createRouter = (controller: TransactionController) => {
   const router = express.Router();
 
-  router.post("/", controller.createTransaction.bind(controller))
-  router.get("/:id", controller.getTransaction.bind(controller))
+  router.get("/", controller.getTransactionTypes.bind(controller))
+  router.get("/:id", controller.getTransactionType.bind(controller))
 
   return router
 }

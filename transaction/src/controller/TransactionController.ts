@@ -77,4 +77,15 @@ export default class TransactionController {
     }
   }
 
+  async getTransactionTypes(req: Request, res: Response) {
+    try {
+      const transactionTypes = await this._useCase.getTypes()
+
+      return res.status(ResponseCode.OK).json(transactionTypes)
+    } catch(error) {
+      this._errorHandler.onError(error)
+      this._errorHandler.respondWithError(res, error, ResponseCode.INTERNAL_SERVER_ERROR)
+    }
+  }
+
 }

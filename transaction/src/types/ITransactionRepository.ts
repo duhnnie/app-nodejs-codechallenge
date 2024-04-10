@@ -8,5 +8,6 @@ export default interface ITransactionRepository {
   findOne(id: string): Promise<Transaction | null>
   updateStatus(id: string, status: TransactionStatus): Promise<void>
   findOneType(id: number): Promise<TransactionType | null>
+  findTypes(): Promise<TransactionType[]>
 
 }

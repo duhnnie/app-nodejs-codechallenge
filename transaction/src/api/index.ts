@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express"
-import { createTransactionRouter } from "./transaction.routes"
+import { createRouter as createTransactionRouter } from "./transaction.routes"
+import { createRouter as createTransactionTypesRouter } from './transaction-types.routes'
 import TransactionController from "../controller/TransactionController"
 import ITransactionUseCase from "../types/ITransactionUseCase"
 import IControllerErrorHandler from "../types/IControllerErrorHandler"
@@ -7,6 +8,7 @@ import IControllerErrorHandler from "../types/IControllerErrorHandler"
 export const createAPIService = (useCase: ITransactionUseCase, errorHandler: IControllerErrorHandler) => {
   const controller = new TransactionController(useCase, errorHandler)
   const transactionRouter = createTransactionRouter(controller)
+  const transactionTypesRouter = createTransactionTypesRouter(controller)
   const app = express()
 
   app.use(express.json())
@@ -16,6 +18,7 @@ export const createAPIService = (useCase: ITransactionUseCase, errorHandler: ICo
   })
 
   app.use("/transaction", transactionRouter)
+  app.use("/transaction-type", transactionTypesRouter)
 
   return app
 }

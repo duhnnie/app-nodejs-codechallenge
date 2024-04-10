@@ -74,4 +74,14 @@ export default class TransactionRepository implements ITransactionRepository {
     }
   }
 
+  async findTypes(): Promise<TransactionType[]> {
+    const res = await this._db.transactionType.findMany()
+
+    return res.map(transactionType => {
+      const { id, name } = transactionType
+
+      return new TransactionType(id, name)
+    })
+  }
+
 }
